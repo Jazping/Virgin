@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Fusion Football Testing</title>
+
+		<!-- copy from cnbabylon.com -->
+		<script src="../../JS/LIB/babylon.js"></script>
+		<script src="../../JS/LIB/babylonjs.materials.min.js"></script>
+		<script src="../../JS/LIB/babylonjs.proceduralTextures.min.js"></script>
+		<script src="../../JS/LIB/babylonjs.postProcess.min.js"></script>
+		<script src="../../JS/LIB/babylonjs.loaders.min.js"></script>
+		<script src="../../JS/LIB/babylonjs.serializers.min.js"></script>
+		<script src="../../JS/LIB/babylon.gui.min.js"></script>
+		<script src="../../JS/LIB/babylon.inspector.bundle.js"></script>
+		<script src="../../JS/LIB/SceneStarter.js"></script>
+
+		<script src="../../JS/TEST/WsTest.js"></script>
+		<script src="../../JS/MYLIB/Fusion.Material.js"></script>
+		<script src="../../JS/MYLIB/Fusion.Scene.js"></script>
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+            #fps {    position: absolute;    right: 20px;    top: 5em;    font-size: 20px;    color: white;/*甯ф暟鏄剧ず*/
+    text-shadow: 2px 2px 0 black;}
+        </style>
+    </head>
+<body>
+ <div id="fps" style="z-index: 302;"></div>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var starter = new SceneStarter("renderCanvas","fps",function(scene,engine,canvas){
+        	
+        	var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            //skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+            skybox.material = skyboxMaterial;
+            skybox.infiniteDistance = true;
+            skybox.material.disableLighting = true;
+            skybox.material.reflectionTexture = new BABYLON.CubeTexture("../../ASSETS/IMAGE/SKYBOX/skybox", scene);//这里的目录不能更深否则babyljs找不到！！
+            skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skybox.renderingGroupId = 1;
+            skybox.isPickable=false;
+            var material = new Fusion.Material(scene);
+            window.fusion = new Fusion.Scene(material,scene,canvas,10);
+            window.scorers = [];
+            for(var i = 0;i<1;i++){
+	            BABYLON.SceneLoader.ImportMesh("", "../../ASSETS/MODEL/", "dummy2.babylon", scene, 
+	            		function (newMeshes, particleSystems, skeletons) {
+	            	var scorer = newMeshes[0];
+	            	scorer.scaling = new BABYLON.Vector3(2,2,2);
+	            	scorer.skeleton = skeletons[0];
+	            	scorers.push(scorer);
+	            	if(scorers.length==1){
+        				begin();
+        				engine.hideLoadingUI();
+        				fusion.switchFollowCamera();
+        	            //fusion.switchFreeCamera();
+	            	}
+	    	    });
+            }
+            
+            return true;
+        });
+        
+        //document.onclick = function (e) {
+        	//fusion.switchFollowCamera();
+        //}
+        document.ondblclick = function(){
+        	fusion.switchFreeCamera();
+        }
+        
+        var counter = 1;
+        function begin(){
+            setTimeout(function(){
+    	        var t = new WsTest("ws://192.168.3.16:8508",{
+    	        	onopen:function(){
+    	        		console.log(t.isOpen());
+    	        		t.send("start");
+    	        	},
+    	        	onmessage:function(e,data){
+    	        		while(data.length>0){
+    		        		fusion.updatePosition(data.shift(),function(){});
+    	        		}
+    	        	}
+    	        });
+            },5000);
+        }
+    </script>
+</body>
+</html>
