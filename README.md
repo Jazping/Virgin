@@ -1,3 +1,8 @@
+# preview
+
+![image]
+(https://github.com/Jazping/virgin/blob/main/static/ASSETS/IMAGE/20210309185523.jpg)
+
 # description
 
 一个基于BABYLON Library游戏框架开发的足球游戏草稿，展示如何使用BABYLON JS制作简单的H5游戏。
