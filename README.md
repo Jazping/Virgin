@@ -1,7 +1,12 @@
 # preview
 
+View in 2D
 
 <img src="https://raw.githubusercontent.com/Jazping/virgin/main/static/ASSETS/IMAGE/20210309185523.jpg" width="1024px" alt="image load fail"/>
+
+View in 3D
+
+<img src="https://raw.githubusercontent.com/Jazping/images/main/20210310/20210310190605.jpg" width="1024px" alt="image load fail"/>
 
 # description
 
