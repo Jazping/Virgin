@@ -1,7 +1,7 @@
 # preview
 
 ![Image text]
-(https://github.com/Jazping/virgin/blob/main/static/ASSETS/IMAGE/20210309185523.jpg)
+(https://raw.githubusercontent.com/Jazping/virgin/main/static/ASSETS/IMAGE/20210309185523.jpg)
 
 # description
 
